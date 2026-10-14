@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noi compriamo Enrico Papi .it</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #0f0f1a);
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            z-index: 2;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #ff007f, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 4px 20px rgba(255, 0, 127, 0.3);
+        }
+        .btn-papi {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            color: #000000;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 25px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            outline: none;
+        }
+        .btn-papi:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 204, 0, 0.6);
+        }
+        .btn-papi:active {
+            transform: scale(0.98);
+        }
+        /* Video nascosto inizialmente, andrà a tutto schermo */
+        video {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Mantiene le proporzioni sia in verticale che in orizzontale */
+            background-color: #000;
+        }
+        /* Quando il video è in modalità fullscreen nativa del browser, object-fit lo adatta al meglio */
+        video:-webkit-full-screen {
+            object-fit: contain;
+        }
+        video:fullscreen {
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainInterface">
+        <h1>Scopri cosa vuole Enrico Papi da te</h1>
+        <button class="btn-papi" id="playBtn">MOOSECA! 🎚️</button>
+    </div>
+
+    <!-- Elemento Video Locale -->
+    <video id="papiVideo" src="papi.mp4" loop playsinline></video>
+
+    <script>
+        const playBtn = document.getElementById('playBtn');
+        const papiVideo = document.getElementById('papiVideo');
+        const mainInterface = document.getElementById('mainInterface');
+
+        playBtn.addEventListener('click', () => {
+            // Avvia la riproduzione del video
+            papiVideo.play().catch(err => {
+                console.log("Riproduzione bloccata dal browser, riprovo dopo l'interazione: ", err);
+            });
+
+            // Mostra l'elemento video
+            papiVideo.style.display = 'block';
+            // Nasconde l'interfaccia iniziale per non sovrapporsi
+            mainInterface.style.display = 'none';
+
+            // Attiva il Tutto Schermo (Fullscreen) adattivo del browser
+            if (papiVideo.requestFullscreen) {
+                papiVideo.requestFullscreen();
+            } else if (papiVideo.webkitRequestFullscreen) { /* Safari / iOS */
+                papiVideo.webkitRequestFullscreen();
+            } else if (papiVideo.msRequestFullscreen) { /* IE11 */
+                papiVideo.msRequestFullscreen();
+            }
+        });
+
+        // Se l'utente esce dal tutto schermo, resettiamo l'interfaccia grafica
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                papiVideo.pause();
+                papiVideo.style.display = 'none';
+                mainInterface.style.display = 'block';
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    </script>
+</body>
+</html>
